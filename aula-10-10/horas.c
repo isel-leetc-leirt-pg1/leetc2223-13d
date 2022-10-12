@@ -1,12 +1,12 @@
 #include <stdio.h>
 
 /**
- * definição da função amx que
+ * definição da função max que
  * dados dois valores inteiros
  * devolve o maior dos dois valores
  */
 int max(int i1, int i2) {
-    if (i1 > i2) return i2;
+    if (i1 > i2) return i1;
     return i2;
 }
     
@@ -25,7 +25,7 @@ int main() {
         printf("hora inicial válida");
     }
     else {
-        printf("hora inicial válida");
+        printf("hora inicial inválida");
     }
     */
     
