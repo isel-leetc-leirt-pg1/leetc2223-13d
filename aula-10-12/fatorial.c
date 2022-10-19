@@ -48,7 +48,11 @@ void test_fatorial() {
     
     // este teste dá um resultado errado. Na próxima aula veremos porquê.
     printf("fatorial(13): ");
-    if (fatorial(13) == 6227020800) printf("OK!\n"); else printf("WRONG!\n");
+    int res;
+    if ((res = fatorial(13)) == 6227020800) printf("OK!\n"); else {
+        printf("WRONG! ");
+        printf("%d\n", res);
+    }
 }
 
 
