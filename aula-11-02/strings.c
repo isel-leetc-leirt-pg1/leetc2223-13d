@@ -42,14 +42,17 @@ int mstrcmp(const char s1[], const char s2[]) {
     return s1[i] - s2[i];
 }
 
+// verifica se a string "line" contém a string "pattern"
+// return a posição em "line" onde a "pattern" existe ou -1
+// se "pattern" não existir
 
-int main() {
-    /* one include more */
-    return 0;
+int mstrstr(const char line[], const char pattern[]) {
+    // a implementar
+    
+    return -1;
 }
-    
-    
-    
+
+
     
     
     

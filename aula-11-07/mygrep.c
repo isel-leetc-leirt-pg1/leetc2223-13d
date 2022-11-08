@@ -2,6 +2,22 @@
 #include <string.h>
 #include <stdbool.h>
 
+
+/*
+ * embora uma função equivalente exista na biblioteca de funções da 
+ * linguagem C (strstr)
+ * estamos a usar a versão reaçlizada em aula cuja implementação está 
+ * presente no ficheiro strings.c
+ * Daí a necessidade de colocar aqui a assinatura da função para o 
+ * compilador não se queixar
+ * 
+ * Para produzir o programa executável temos de escrever o comando:
+ * 
+ * gcc -o mygrep -Wall mygrep.c strings.c
+ * 
+ */
+int mstrstr(const char line[], const char pattern[]);
+
 /*********************************************************
  * recolhe a linha lida do input standard +ara
  * o array line
@@ -33,8 +49,6 @@ int readline(char line[], int capacity) {
 #define MAX_FILE_NAME 128
 #define MAX_WORD 20
 #define MAX_LINE 256
-
-int mstrstr(const char line[], const char pattern[]);
 
 
 /**
