@@ -8,11 +8,12 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include "datas.h"
+#include "date.h"
 
 
 
 int main() {
+
     
     Date d1 = { .day = 1, .month = 1, .year = 1900 };
     
@@ -27,9 +28,12 @@ int main() {
     
     printf("dias 1900 = %d\n", date_days_from_jan1(d2)+
                                date_days_until_dez31(d2));
+                               
     printf("diff days=%d\n", date_diff_days(d1, d2));
+    
     printf("dia da semana de 8/1/1901: ");
     show_weekday(wd);
+    
     printf("\n");
     return 0;
     

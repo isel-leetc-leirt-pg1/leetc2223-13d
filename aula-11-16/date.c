@@ -9,14 +9,28 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
-
-typedef struct {
-    int day;
-    int month;
-    int year;
-} Date;
+#include "date.h"
 
 
+/**
+ * retorna a data atual
+ * Na rrealização desta função é preciso usar fubções espcíficas do Unix
+ */
+Date date_today() {
+  time_t t = time(NULL);
+  struct tm lt = *localtime(&t); 
+  
+  Date d = { .day = lt.tm_mday, .month = lt.tm_mon+1, .year = lt.tm_year + 1900};
+  return d;
+}
+
+
+/**
+ * Mostra uma data no output standard (consola)
+ */
+void date_show(Date d, char msg[]) {
+    printf("%s: %d/%d/%d", msg, d.day, d.month, d.year);
+}
 
 /**
  * devolve o total de dias no ano "year"
@@ -31,54 +45,15 @@ bool is_leap_year(int year) {
     return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
 
+ 
 /**
- * retorna os dias do mês "month"
+ * Retorna os dias do mês "month"
  * Assume que "month" está entre 1 e 12
- * e que o ano é valido
- * Utiliza a instrução switch da forma mais comum
- */
-int month_days(int month, int year) {
-    int dm = 0;
-    
-    switch(month) {
-        case 4: case 6: case 9: case 11:
-            dm = 30;
-            break;
-        case 2:
-            if (is_leap_year(year)) dm = 29; else dm = 28;
-            break;
-        default:
-            dm = 31;
-            break;
-    }
-    return dm;
-}
-
-/**
- * versão alternativa utilizando a instrução "return" em cada ramo
- * não há mais nada a realizar na função pelo que se pode retornar de imediato
- * fica mais compacta do que a versão anterior
- */
-int month_days2(int month, int year) {
-    switch(month) {
-        case 4: case 6: case 9: case 11:
-           return 30;
-        case 2:
-            if (is_leap_year(year)) return 29; else return 28;
-        default:
-            return 31;
-    }
-}
-
-
-
-/**
- * versão ainda mais compacta tirando paratido
- * de um array em que cada posiço tem os dias do mês respectivo 
+ * Tira partido de um array em que cada posição tem os dias do mês respectivo 
  * (janeiro = 1)
  * A primeira posição (0) do array é ignorada
  */
-int month_days3(int month, int year) {
+int month_days(int month, int year) {
     int days[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     
     int dm = days[month];
@@ -154,13 +129,19 @@ int date_diff_days(Date d1, Date d2) {
     return days1 + days2 + days3;
 }
 
+
+bool is_valid_date(int d, int m, int y) {
+     if ( d  < 1 || d  > 31 || m < 1 || m > 12 || y < 0)
+        return false;
+    return d <= month_days(m, y);
+}
+
 /**
  * retorna true se a data recebida em "d" for válida, "false" caso contrário
  */
 bool date_valid(Date d) {
-    if ( d.day < 1 || d.day > 31 || d.month < 1 || d.month > 12 || d.year < 0)
-        return false;
-    return d.day <= month_days(d.month, d.year);
+     
+    return  is_valid_date(d.day, d.month, d.year);
 }
 
 /**
