@@ -36,7 +36,7 @@ int main() {
     // Diff days
     TEST(diff_consecutive_days);
  
-    // Weekdays
+    // Weekdays tests
     TEST(date_weekday_of_first_day_2023);
 	return 0;
 }
