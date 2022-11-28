@@ -1,3 +1,4 @@
+ 
 /**
  * Apresenta um "fatia de círculo" a rodar no centro da janela gráfica
  * 
@@ -18,7 +19,7 @@
 #define PIE_RADIUS 150
 #define PIE_COLOR c_orange
 
-#define TIME_BASE 1000
+#define TIME_BASE 50
 #define PIE_ROTATE_STEP 20
 
 
@@ -82,3 +83,4 @@ int main() {
     return 0;
     
 }
+ 
