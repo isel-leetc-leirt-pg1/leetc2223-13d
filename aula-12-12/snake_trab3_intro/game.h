@@ -8,14 +8,15 @@
 #define MIN_CELL_SIZE 10
 #define MAX_CELL_SIDE 50
 
+// size of info area
 #define HEADER_SIZE  0
  
 
 // colors
 #define SNAKE_HEAD_COLOR    c_orange
 #define SNAKE_BODY_COLOR    graph_rgb(207, 169, 135)
-#define FLOWER_GOOD         graph_rgb(188, 255, 190)
-#define FLOWER_BAD          graph_rgb(195, 0, 0)
+#define GOOD_FOOD_COLOR     graph_rgb(188, 255, 190)
+#define BAD_FOOD_COLOR      graph_rgb(195, 0, 0)
 #define ARENA_COLOR         graph_rgb(0, 118, 58)
 #define WALL_COLOR          c_dgray
 
