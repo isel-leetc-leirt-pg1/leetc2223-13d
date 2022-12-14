@@ -3,6 +3,7 @@
 #include "strutils.h"
 #include <unistd.h>
 #include "game.h"
+#include "info_zone.h"
 
 #define LEVELS_FILE_NAME "levels.txt"
 #define MAX_LINE  128
@@ -13,12 +14,16 @@
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 900
 
-
+// game explicitly initialized
+// to support build trab3  version without trab3 completion
 Game game = {
     .window_width = WINDOW_WIDTH,
     .window_height = WINDOW_HEIGHT,
     .nlevels = 2,
-    
+    .paused = false,
+    .end = false,
+    .curr_level_idx = 0,
+    .ticks_to_sec = TICKS_PER_SEC,
     .levels = {
         { 
             .cells_x = 25,
@@ -41,7 +46,16 @@ Game game = {
             .food = {
                 { .pos = { .x = 21, .y = 3 }, .lifetime = 20, .energy = 6 }
             },
-            .snake = { .pos = { .x = 3, .y = 10 }, .time_to_eat = 10, .penalty = 5 }
+            .snake = { 
+                .pos = { .x = 3, .y = 10 }, 
+                .time_to_eat = 10, 
+                .penalty = 5,
+                .dir = DIR_NONE,
+                .body_count = 0,
+                .iput = 0,
+                .iget = 0,
+                .to_grow = 0
+            }
         },
         {
             .cells_x = 50,
@@ -69,7 +83,16 @@ Game game = {
                 { .pos = { .x = 37, .y = 8 }, .lifetime = 20, .energy = 6 },
                 { .pos = { .x = 46, .y = 25 }, .lifetime = 40, .energy = -2 }
             },
-            .snake = { .pos = { .x = 3, .y = 10 }, .time_to_eat = 10, .penalty = 4 }
+            .snake = { 
+                .pos = { .x = 3, .y = 10 }, 
+                .time_to_eat = 10, 
+                .penalty = 4,
+                .dir = DIR_NONE,
+                .body_count = 0,
+                .iput = 0,
+                .iget = 0,
+                .to_grow = 0
+            }
         }
             
     }
@@ -103,6 +126,8 @@ int rand_range(int min, int max) {
 
 // game functions
 
+// not used in this version since 
+// the game variable is explicitly initialized
 void game_init(int width, int height) {
     game.window_width = width;
     game.window_height = height;
@@ -118,16 +143,6 @@ Level *game_level(int nlevel) {
     return &game.levels[nlevel];
 }
 
-int game_add_level(int width_cells, int height_cells, int target_size, int timeout) {
-    if (game.nlevels == MAX_LEVELS) return TOO_MANY_LEVELS;
-     // validate cell side size
-    int cell_side = game.window_width / width_cells;
-    if (cell_side < MIN_CELL_SIZE || cell_side > MAX_CELL_SIDE ||
-         game.window_height  < cell_side * height_cells) return WRONG_CELL_SIZE;
-    
-    level_init(&game.levels[game.nlevels++], width_cells, height_cells, target_size, timeout);
-    return SUCCESS;
-}
 
 int game_get_width() {
     return game.window_width; 
@@ -163,6 +178,8 @@ int game_tick() {
     return LEVEL_CONT;
 }
 
+// Event Handlers and game lgic
+
 // Kbd events handler
 
 #define MSG_LEVEL_WIN "Congrats, you win the level! Press a key to continue..."
@@ -185,17 +202,28 @@ void process_win() {
     printf("GAME OR LEVEL WINNED!\n");
 }
 
-int process_collison(int colision_type, Point p, Level *level) {
+int process_collison(int collision_type, Point p, Level *level) {
      // TO DO
+     switch(collision_type) {
+         case TYPE_WALL:
+         case TYPE_SNAKE:
+            game.end = true;
+          
+            return LEVEL_LOOSE;
+         case TYPE_FOOD: {
+            Snake * snake = level_get_snake(level);
+            Food *food = level_food_at_point(level, p);
+            snake_grow(snake, food->energy);
+            food_random_move(food);
+            return LEVEL_CONT;
+         }
+         default:
+            return LEVEL_CONT;
+            
+     }
      return LEVEL_CONT;
 }
 
-int update_level(Level *level) {
-    int res;
-    if ((res = game_tick()) != LEVEL_CONT) return res;
-    if (info_tick(level) == CHRON_TIMEOUT) return LEVEL_LOOSE;
-    return LEVEL_CONT;
-}
 
 
 int key2dir(int key) {
@@ -223,6 +251,10 @@ void on_key(KeyEvent ke) {
 
 void on_timer() {
     // TO_CHANGE
+    if (game.end) {
+        printf("End game\n");
+        graph_exit();
+    }
     Level *level = game_curr_level();
     Snake *snake = level_get_snake(level);
     

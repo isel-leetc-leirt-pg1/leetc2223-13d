@@ -1,5 +1,5 @@
 #include "game.h"
-
+#include "info_zone.h"
 
 
 // visual components

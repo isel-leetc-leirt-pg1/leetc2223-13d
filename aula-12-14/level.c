@@ -2,26 +2,12 @@
 #include "game.h"
 
 int level_actor_at(Level *level, int px, int py) {
-    Point pos = { px, py};
-   
-    // check food
-    for(int i=0; i < level->nfood; ++i) {
-        if (point_equals(level->food[i].pos, pos)) 
-            return TYPE_FOOD;
-    }
-    
-    // check walls
-    for(int i=0; i < level->nwalls; ++i) {
-        if (wall_intersects(&level->walls[i], pos)) 
-            return TYPE_WALL;
-    }
-    
-    // check snake
-    if  (point_equals(level->snake.pos, pos)) return TYPE_SNAKE;
-    return TYPE_NONE;
+   // TO DO
+   return TYPE_NONE;
 }
 
 
+// Not used in this version
 void level_init(Level *level, int cells_x, int cells_y, int target_size, int target_timeout) {
    
     level->cell_side = game_get_width() / cells_x;
@@ -46,30 +32,7 @@ void level_init(Level *level, int cells_x, int cells_y, int target_size, int tar
     level->nwalls = 4;
 }
 
-int level_add_wall(Level *level, int pos_x, int pos_y, int type, int size) {
-   
-         
-    if (level->nwalls == MAX_WALLS) return TOO_MANY_WALLS;
  
-    wall_init(&level->walls[level->nwalls++],type, pos_x, pos_y, size);
-    return SUCCESS;
-}
-
-
-int level_add_food(Level *level, int px, int py, int lifetime, int energy) {
-   
-    if (level->nfood == MAX_FOOD) return TOO_MANY_FOOD;
-    food_init(&level->food[level->nfood++], px, py, lifetime, energy);
-    return SUCCESS;
-}
-
-
-int level_put_snake(Level *level,int px, int py, int time_to_eat, int penalty) {
-   
-    snake_init(&level->snake, px, py, time_to_eat, penalty);
-    return SUCCESS;
-}
-
 
 void level_show(Level *level) {
     // draw background
@@ -99,16 +62,14 @@ Snake *level_get_snake(Level *level) {
     return &level->snake;
 }
 
-void level_process_timed_actors(Level *level) {
-    // check food 
-    for(int i=0; i < level->nfood; ++i) {
-       food_tick(&level->food[i]);
-    }
-}
+ 
 
 Food* level_food_at_point(Level *level, Point pos) {
-     for(int i=0; i < level->nfood; ++i)
-        if (point_equals(level->food[i].pos, pos))
-            return &level->food[i];
+    for(int i= 0; i < level->nfood; ++i) {
+        Food *food = &level->food[i];
+        if (point_equals(food->pos, pos)) {
+           return food;
+        }
+    }
     return NULL;
 }

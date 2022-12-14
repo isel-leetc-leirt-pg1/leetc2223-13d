@@ -20,6 +20,7 @@ void point_init(Point *p, int x, int y) {
 
 // SNAKE
 
+// not used in this version
 void snake_init(Snake *snake, int x, int y, int time_to_eat, int penalty) {
 	point_init(&snake->pos, x, y);
     snake->time_to_eat = time_to_eat;
@@ -55,12 +56,12 @@ void snake_show(Snake *snake, Level *level) {
     // TO COMPLETE
 }
 
+
 void snake_change_dir(Snake *snake,  int dir) {
     snake->dir = dir;
 }
 
 
- 
 int snake_move(Snake *snake) {
     Point new_pos;
     switch(snake->dir) {
@@ -83,15 +84,21 @@ int snake_move(Snake *snake) {
             return LEVEL_CONT;
     }
     
-    snake->pos = new_pos;
+    Level *level = game_curr_level();
     
     // detect and process collision
+  
+    int type = level_actor_at(level, new_pos.x, new_pos.y);
+    int res =  process_collison(type, new_pos, level);
+    if (res != LEVEL_CONT) return res;
+         
+  
     
-    
+    snake->pos = new_pos;
     // move and change snake size
-      
     return LEVEL_CONT;
 }
+
 
 int snake_size(Snake *s) {
     return s->body_count + 1;
@@ -123,6 +130,7 @@ void food_tick(Food *f) {
 void food_random_move(Food *f) {
     // TO DO
 }
+
 // WALL
 
 void wall_init(Wall *w, int type, int px, int py, int size) {
@@ -143,10 +151,8 @@ void wall_show(Wall *w, Level *level) {
 }
 
 
-
 bool wall_intersects(Wall *w, Point pos) {
     // TO DO
-   
     return false;
 }
 

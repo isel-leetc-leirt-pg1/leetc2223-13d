@@ -1,10 +1,10 @@
-all: simple_snake_c tstrutils
+all: snake_t3 tstrutils
 
-simple_snake_c: game.c strutils.c  actors.c level.c  info_zone.c
-	gcc -o simple_snake_c -Wall -g game.c actors.c level.c strutils.c  info_zone.c -lpg
+snake_t3: game.c strutils.c  actors.c level.c  info_zone.o
+	gcc -o snake_t3 -Wall -g game.c actors.c level.c strutils.c  info_zone.o -lpg
 	
 tstrutils: tstrutils.c strutils.c
 	gcc -o tstrutils -Wall -g tstrutils.c strutils.c
 
 clean:
-	rm -rf simple_snake_c tstrutils
+	rm -rf snake_t3 tstrutils
